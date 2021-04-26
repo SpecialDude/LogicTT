@@ -76,6 +76,8 @@ A       B
 0       1
 0       0
 ```
+The ***simplePrint()*** takes extra argument ***export*** which can be set to **True** to return the string.
+
 > ### **Logical Operations on Truth Objects**
 Logical operations can performed on the Truth Objects as follows:
 ```python
@@ -276,6 +278,12 @@ Output:
 |  1  |  1  |  1  |       0        |       0        |        0         |     1      |
 +-----------------------------------------------------------------------------------+
 ```
+> ### Other Methods of the Truth Class
+- Methods
+    - ***lenTrue()***: The number of True/1 present in the Truth object instance
+    - ***lenTrue()***: The number of False/0 present in the Truth object instance
+- Slicing
+    - ***p["true"]***: returns a dictionary, all the True/1 present in ***p*** as the values and their respective indexes as keys
 
 > ### Conclusion
 Enjoy this little project to work with Truth Tables and Logic Gates and discover some hidden interesting and weird truths about Logic/Binary operations. You have a Math or Digital Logic Gate Assignment and your are required to generate a 64 rows Truth Table or more?, don't panic use TT😋😊!!!
