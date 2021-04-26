@@ -1,20 +1,33 @@
 class Truth:
     """Truth Object Class"""
-    def __init__(self, truthValues: tuple[bool]):
+    def __init__(self, truthValues):
         self.truthValues = truthValues
     
-    def __len__(self) -> int:
+    def __len__(self):
         return len(self.truthValues)
-
-    def __str__(self) -> str:
-        return str("\t".join([str(int(i)) for i in self.truthValues]))
     
-    def __repr__(self) -> str:
+    def __getitem__(self, level):
+        if isinstance(level, str):
+            if level == "true":
+                return {i:self.truthValues[i] for i in range(len(self.truthValues)) if self.truthValues[i] == True}
+            elif level== "false":
+                return {i:self.truthValues[i] for i in range(len(self.truthValues)) if self.truthValues[i] == False}
+    
+    def lenTrue(self):
+        """Returns the number of True/1 present in the Truth Object"""
+        return len(self["true"].values())
+    
+    def lenFalse(self):
+        """Returns the number of False/0 present in the Truth Object"""
+        return len(self["false"].values())
+
+    def __str__(self):
+        return str(self.truthValues)
+    
+    def __repr__(self):
         return self.__str__()
         
     def __mul__(self, other):
-        if isinstance(other, Truth):
-            pass
         return Truth(binaryOperation(self.truthValues, other.truthValues, "and"))
     
     def __and__(self, other):
@@ -90,36 +103,36 @@ class Truth:
         return self == other
 
 
-def NOT(p: bool) -> bool:
+def NOT(p):
     return not p
 
-def AND(p: bool, q: bool) -> bool:
+def AND(p, q):
     return p and q
 
-def NAND(p: bool, q: bool) -> bool:
+def NAND(p, q):
     return not (p and q)
 
-def OR(p: bool, q: bool) -> bool:
+def OR(p, q):
     return p or q
 
-def NOR(p: bool, q: bool) -> bool:
+def NOR(p, q):
     return not (p or q)
 
-def XOR(p: bool, q: bool) -> bool:
+def XOR(p, q):
     return p != q
 
-def XNOR(p: bool, q: bool) -> bool:
+def XNOR(p, q):
     return p == q
 
-def IMP(p: bool, q: bool) -> bool:
+def IMP(p, q):
     return (p == q) or q
 
-def BICON(p: bool, q: bool) -> bool:
+def BICON(p, q):
     return p == q
 
 
 
-def binaryOperation(truthRowP: tuple[bool], truthRowQ: tuple[bool], operator: str) -> tuple[bool]:
+def binaryOperation(truthRowP, truthRowQ, operator):
     """Logical Binary Operation on list/tuple of boolean values
         \noperator argument values:
         \n"or" --> OR operation
@@ -133,11 +146,11 @@ def binaryOperation(truthRowP: tuple[bool], truthRowQ: tuple[bool], operator: st
     symbols = {"or": OR, "nor": NOR, "xor": XOR, "and": AND, "nand": NAND, "imp": IMP, "xnor": XNOR}
     return tuple([symbols[operator](truthRowP[i], truthRowQ[i]) for i in range(len(truthRowP))])
 
-def unaryOperation(truthRow: tuple[bool]) -> tuple[bool]:
+def unaryOperation(truthRow):
     """NOT peration on list/tuple of boolean values"""
     return tuple([NOT(truthRow[i]) for i in range(len(truthRow))])
 
-def truthLiteral(p: bool, binaryRep = False):
+def truthLiteral(p, binaryRep=False):
     if p:
         if binaryRep:
              return "1"
@@ -149,7 +162,7 @@ def truthLiteral(p: bool, binaryRep = False):
 
 
 
-def __GATE(gate: str, *Inputs: Truth):
+def __GATE(gate, *Inputs):
     operated = binaryOperation(Inputs[0].truthValues, Inputs[1].truthValues, gate)
 
     for i in range(2, len(Inputs)):
@@ -157,38 +170,38 @@ def __GATE(gate: str, *Inputs: Truth):
     return operated
 
 
-def NOTgate(Input: Truth):
+def NOTgate(Input):
     return ~Input
 
-def ANDgate(*Inputs: Truth):
+def ANDgate(*Inputs):
     return Truth(__GATE("and", *Inputs))
 
-def NANDgate(*Inputs: Truth, cascade: bool = False):
+def NANDgate(*Inputs, cascade=False):
     """Perform chain operation if cascade == True"""
     if cascade:
         return Truth(__GATE("nand", *Inputs))
     return ~Truth(__GATE("and", *Inputs))
     
-def ORgate(*Inputs: Truth):
+def ORgate(*Inputs):
     return Truth(__GATE("or", *Inputs))
 
-def NORgate(*Inputs: Truth, cascade: bool = False):
+def NORgate(*Inputs, cascade=False):
     """Perform chain operation if cascade == True"""
     if cascade:
         return Truth(__GATE("nor", *Inputs))
     return ~Truth(__GATE("or", *Inputs))
     
-def XORgate(*Inputs: Truth):
+def XORgate(*Inputs):
     return Truth(__GATE("xor", *Inputs))
 
-def XNORgate(*Inputs: Truth, cascade: bool = False):
+def XNORgate(*Inputs, cascade=False):
     """Perform chain operation if cascade == True"""
     if cascade:
         return Truth(__GATE("xnor", *Inputs))
     return ~ Truth(__GATE("xor", *Inputs))
     
 
-def generator(maxLenght: int, propositionDiffNumber: int, reversed=False) -> tuple[bool]:
+def generator(maxLenght, propositionDiffNumber, reversed=False):
     truthValues = []
     truthValue = True
     for i in range(maxLenght):
@@ -200,12 +213,12 @@ def generator(maxLenght: int, propositionDiffNumber: int, reversed=False) -> tup
     
     return tuple(truthValues)
 
-def generateTruthRows(NumOfPropositions: int, reversed=False) -> list[tuple[bool]]:
+def generateTruthRows(NumOfPropositions, reversed=False):
     maxLenght = 2 ** NumOfPropositions
 
     return [Truth(generator(maxLenght, maxLenght//(2 ** (i + 1)), reversed)) for i in range(NumOfPropositions)]
 
-def printTT(truthData: dict[str, Truth], *, space: int = 4, binaryRepr: bool = False, perfectAlign:bool = False):
+def printTT(truthData, space=4, binaryRepr=False, perfectAlign=False):
     """Print Truth Table"""
     truthRow = len(list(truthData.values())[0])
     sepSpace = " " * space
@@ -239,10 +252,14 @@ def printTT(truthData: dict[str, Truth], *, space: int = 4, binaryRepr: bool = F
         print(strRep)
     print("+" + "-"* (len(strRep)-2) + "+")
 
-def simplePrint(truthData: dict[str, Truth], colSeperator: str = "\t", rowSeperator: str = "\n", binaryRepr: bool = False):
+def simplePrint(truthData, colSeperator="\t", rowSeperator="\n", binaryRepr=False, export=False):
     truthRow = len(list(truthData.values())[0])
     strRep = colSeperator.join([i for i in truthData])
-    print(strRep, end=rowSeperator)
+    strRep += rowSeperator
     for i in range(truthRow):
-        strRep = colSeperator.join([truthLiteral(truthData[column].truthValues[i], binaryRepr) for column in truthData])
-        print(strRep, end=rowSeperator)
+        strRep += colSeperator.join([truthLiteral(truthData[column].truthValues[i], binaryRepr) for column in truthData])
+        strRep += rowSeperator
+    
+    if export:
+        return strRep
+    print(strRep)
