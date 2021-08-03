@@ -281,7 +281,7 @@ Output:
 > ### Other Methods of the Truth Class
 - Methods
     - ***lenTrue()***: The number of True/1 present in the Truth object instance
-    - ***lenTrue()***: The number of False/0 present in the Truth object instance
+    - ***lenFalse()***: The number of False/0 present in the Truth object instance
 - Slicing
     - ***p["true"]***: returns a dictionary, all the True/1 present in ***p*** as the values and their respective indexes as keys
 
